@@ -4,7 +4,7 @@ Training and test sets have been concatenated;
 
 Mean and standard deviation for each column have been extracted and saved in files: datasetmean.csv and datasetsd.csv;
 
-Descriptive activity names (by the original codebook) have beem used to name the activities in data sets;
+Descriptive activity names (by the original codebook) have been used to name the activities in data sets;
 
 Appropriately labels (by the original codebook) have been aplied to descriptive variable names in the data set and it has been saved as tidydata.csv;  
 
