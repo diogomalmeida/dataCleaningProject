@@ -14,6 +14,6 @@ An independent tidy data set with the average of each variable for each activity
 2. Getting the average
 3. Combining all resuts
 4. Setting activity
-6. Saving file as tidydatamean.csv
+6. Saving file as tidydatamean.csv and tidydatamean.txt
 
 
