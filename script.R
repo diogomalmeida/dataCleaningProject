@@ -44,8 +44,12 @@ dataset$V1<- gsub(6,"LAYING",dataset$V1)
 # 4. Appropriately labels the data set with descriptive variable names.
 # Reading labels(features);
 datasetlabels<- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Dataset//features.txt",sep = "",header = FALSE)
-# vector of labels
+# Vector of labels
 labelsvec <- as.character(datasetlabels$V2)
+# Adding labels to datasetmean  
+datasetmean<-cbind(labelsvec,datasetmean)
+# Adding labels to datasetsd
+datasetsd<-cbind(labelsvec,datasetsd)
 # "activity" label;
 lab1 <- "activity"
 # Combining "activity" with labels;
@@ -83,5 +87,11 @@ tidydatamean$activity[4] <- "SITTING"
 tidydatamean$activity[5] <- "STANDING"
 tidydatamean$activity[6] <- "LAYING"
 # Saving files
-write.csv(tidydatamean,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+# tidydata
 write.csv(dataset,".\\tidydatasets\\tidydata.csv", row.names = FALSE)
+# tidydatamean
+write.csv(tidydatamean,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+# datasetmean
+write.csv(datasetmean,".\\tidydatasets\\datasetmean.csv", row.names = FALSE)
+# datasetsd
+write.csv(datasetsd,".\\tidydatasets\\datasetsd.csv", row.names = FALSE)
