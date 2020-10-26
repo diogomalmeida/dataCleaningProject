@@ -71,4 +71,17 @@ vec6mean <- sapply(dataset6, mean)
 # Combining all resuts
 datasetresult <- rbind(vec1mean,vec2mean,vec3mean,vec4mean,vec5mean,vec6mean)
 # Tidy data as dataframe
-tidydata <- as.data.frame(datasetresult)
+# Combining all resuts
+datasetresult <- rbind(vec1mean,vec2mean,vec3mean,vec4mean,vec5mean,vec6mean)
+# Tidy data as dataframe
+tidydatamean <- as.data.frame(datasetresult)
+# Setting activity
+tidydatamean$activity[1] <- "WALKING"
+tidydatamean$activity[2] <- "WALKING_UPSTAIRS"
+tidydatamean$activity[3] <- "WALKING_DOWNSTAIRS"
+tidydatamean$activity[4] <- "SITTING"
+tidydatamean$activity[5] <- "STANDING"
+tidydatamean$activity[6] <- "LAYING"
+# Saving files
+write.csv(tidydatamean,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+write.csv(dataset,".\\tidydatasets\\tidydata.csv", row.names = FALSE)
