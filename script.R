@@ -91,6 +91,7 @@ tidydatamean$activity[6] <- "LAYING"
 write.csv(dataset,".\\tidydatasets\\tidydata.csv", row.names = FALSE)
 # tidydatamean
 write.csv(tidydatamean,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+write.table(tidydatamean, file = ".\\tidydatasets\\tidydatamean.txt", row.name=FALSE)
 # datasetmean
 write.csv(datasetmean,".\\tidydatasets\\datasetmean.csv", row.names = FALSE)
 # datasetsd
