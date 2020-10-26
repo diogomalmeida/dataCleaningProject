@@ -10,11 +10,18 @@ labelstrain <- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Datase
 # Reading test labels;
 labelstest <- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Dataset//test//y_test.txt", sep = "", header = FALSE)
 
-# Concatenating set and labels
+# Reading training labels;
+subjecttrain <- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Dataset//train//subject_train.txt", sep = "", header = FALSE)
+
+# Reading test labels;
+subjecttest <- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Dataset//test//subject_test.txt", sep = "", header = FALSE)
+
+# Concatenating subject, labels and set
 # training
-datasettraincomplete <- cbind(labelstrain,datasettrain)
+datasettraincomplete <- cbind(subjecttrain,labelstrain,datasettrain)
 # Test
-datasettestcomplete <- cbind(labelstest,datasettest)
+datasettestcomplete <- cbind(subjecttest,labelstest,datasettest)
+
 
 # 1.Merges the training and the test sets to create one data set.
 # Concatenating training and test sets
@@ -23,23 +30,23 @@ dataset <- rbind(datasettraincomplete,datasettestcomplete)
 # 2.Extracts only the measurements on the mean and standard deviation for each measurement.
 # Mean and standard deviation for each column;
 # Mean
-datasetmean<-sapply(dataset[,-1], mean)
+datasetmean<-sapply(dataset[,3:563], mean)
 # Standard deviation;
-datasetsd<-sapply(dataset[,-1], sd)
+datasetsd<-sapply(dataset[,3:563], sd)
 
 # 3. Uses descriptive activity names to name the activities in the data set.
 # Replace 1 to WALKING
-dataset$V1<- gsub(1,"WALKING",dataset$V1)
+dataset[,2]<- gsub(1,"WALKING",dataset[,2])
 # Replace 2 to WALKING_UPSTAIRS
-dataset$V1<- gsub(2,"WALKING_UPSTAIRS",dataset$V1)
+dataset[,2]<- gsub(2,"WALKING_UPSTAIRS",dataset[,2])
 # Replace 3 to WALKING_DOWNSTAIRS
-dataset$V1<- gsub(3,"WALKING_DOWNSTAIRS",dataset$V1)
+dataset[,2]<- gsub(3,"WALKING_DOWNSTAIRS",dataset[,2])
 # Replace 4 to SITTING
-dataset$V1<- gsub(4,"SITTING",dataset$V1)
+dataset[,2]<- gsub(4,"SITTING",dataset[,2])
 # Replace 5 to STANDING
-dataset$V1<- gsub(5,"STANDING",dataset$V1)
+dataset[,2]<- gsub(5,"STANDING",dataset[,2])
 # Replace 6 to LAYING
-dataset$V1<- gsub(6,"LAYING",dataset$V1)
+dataset[,2]<- gsub(6,"LAYING",dataset[,2])
 
 # 4. Appropriately labels the data set with descriptive variable names.
 # Reading labels(features);
@@ -50,48 +57,32 @@ labelsvec <- as.character(datasetlabels$V2)
 datasetmean<-cbind(labelsvec,datasetmean)
 # Adding labels to datasetsd
 datasetsd<-cbind(labelsvec,datasetsd)
-# "activity" label;
-lab1 <- "activity"
-# Combining "activity" with labels;
-labelsvec2 <- c(lab1,labelsvec)
-# Changing column names of dataset with descriptive variable names;
-colnames(dataset) <- labelsvec2
+# Combining "subject", "activity" with labels;
+labelsvec2 <- c("subject","activity",labelsvec)
 
 # 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 # Filtering each dataset by activity
-dataset1 <- dataset[dataset$activity =="WALKING",]
-dataset2 <- dataset[dataset$activity =="WALKING_UPSTAIRS",]
-dataset3 <- dataset[dataset$activity =="WALKING_DOWNSTAIRS",]
-dataset4 <- dataset[dataset$activity =="SITTING",]
-dataset5 <- dataset[dataset$activity =="STANDING",]
-dataset6 <- dataset[dataset$activity =="LAYING",]
-# Getting the average
-vec1mean <- sapply(dataset1, mean)
-vec2mean <- sapply(dataset2, mean)
-vec3mean <- sapply(dataset3, mean)
-vec4mean <- sapply(dataset4, mean)
-vec5mean <- sapply(dataset5, mean)
-vec6mean <- sapply(dataset6, mean)
-# Combining all resuts
-datasetresult <- rbind(vec1mean,vec2mean,vec3mean,vec4mean,vec5mean,vec6mean)
-# Tidy data as dataframe
-# Combining all resuts
-datasetresult <- rbind(vec1mean,vec2mean,vec3mean,vec4mean,vec5mean,vec6mean)
-# Tidy data as dataframe
-tidydatamean <- as.data.frame(datasetresult)
-# Setting activity
-tidydatamean$activity[1] <- "WALKING"
-tidydatamean$activity[2] <- "WALKING_UPSTAIRS"
-tidydatamean$activity[3] <- "WALKING_DOWNSTAIRS"
-tidydatamean$activity[4] <- "SITTING"
-tidydatamean$activity[5] <- "STANDING"
-tidydatamean$activity[6] <- "LAYING"
+# Load dplyr packege
+library(dplyr)
+# Changing names of 1º and 2º columns
+colnames(dataset)[1] <- "subject"
+colnames(dataset)[2] <- "activity"
+# Group by subject and activity  
+byactsub <- dataset %>% group_by(subject,activity)
+# getting the mean
+datasetbyactsub <- byactsub %>% summarise_all(mean)
+
+# datasets with descriptive variable names
+colnames(dataset) <- labelsvec2
+# datasetbyactsub with descriptive variable names
+colnames(datasetbyactsub) <- labelsvec2
+
 # Saving files
 # tidydata
 write.csv(dataset,".\\tidydatasets\\tidydata.csv", row.names = FALSE)
-# tidydatamean
-write.csv(tidydatamean,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
-write.table(tidydatamean, file = ".\\tidydatasets\\tidydatamean.txt", row.name=FALSE)
+# datasetbyactsub
+write.csv(datasetbyactsub,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+write.table(datasetbyactsub, file = ".\\tidydatasets\\tidydatamean.txt", row.name=FALSE)
 # datasetmean
 write.csv(datasetmean,".\\tidydatasets\\datasetmean.csv", row.names = FALSE)
 # datasetsd
