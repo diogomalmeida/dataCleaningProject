@@ -23,18 +23,12 @@ datasettraincomplete <- cbind(subjecttrain,labelstrain,datasettrain)
 datasettestcomplete <- cbind(subjecttest,labelstest,datasettest)
 
 
-# 1.Merges the training and the test sets to create one data set.
+# Merges the training and the test sets to create one data set.
 # Concatenating training and test sets
 dataset <- rbind(datasettraincomplete,datasettestcomplete)
 
-# 2.Extracts only the measurements on the mean and standard deviation for each measurement.
-# Mean and standard deviation for each column;
-# Mean
-datasetmean<-sapply(dataset[,3:563], mean)
-# Standard deviation;
-datasetsd<-sapply(dataset[,3:563], sd)
 
-# 3. Uses descriptive activity names to name the activities in the data set.
+# Uses descriptive activity names to name the activities in the data set.
 # Replace 1 to WALKING
 dataset[,2]<- gsub(1,"WALKING",dataset[,2])
 # Replace 2 to WALKING_UPSTAIRS
@@ -48,19 +42,15 @@ dataset[,2]<- gsub(5,"STANDING",dataset[,2])
 # Replace 6 to LAYING
 dataset[,2]<- gsub(6,"LAYING",dataset[,2])
 
-# 4. Appropriately labels the data set with descriptive variable names.
+# Appropriately labels the data set with descriptive variable names.
 # Reading labels(features);
 datasetlabels<- read.csv(".//getdata_projectfiles_UCI HAR Dataset//UCI HAR Dataset//features.txt",sep = "",header = FALSE)
 # Vector of labels
 labelsvec <- as.character(datasetlabels$V2)
-# Adding labels to datasetmean  
-datasetmean<-cbind(labelsvec,datasetmean)
-# Adding labels to datasetsd
-datasetsd<-cbind(labelsvec,datasetsd)
 # Combining "subject", "activity" with labels;
 labelsvec2 <- c("subject","activity",labelsvec)
 
-# 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+# From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 # Filtering each dataset by activity
 # Load dplyr packege
 library(dplyr)
@@ -77,13 +67,12 @@ colnames(dataset) <- labelsvec2
 # datasetbyactsub with descriptive variable names
 colnames(datasetbyactsub) <- labelsvec2
 
+# Extracts only the measurements on the mean and standard deviation for each measurement.
+selcol <- grep("subject|activity|.mean\\(\\)*|.std\\(\\)*", labelsvec2)
+tidydataset <- datasetbyactsub[,selcol]
+
 # Saving files
 # tidydata
-write.csv(dataset,".\\tidydatasets\\tidydata.csv", row.names = FALSE)
-# datasetbyactsub
-write.csv(datasetbyactsub,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
-write.table(datasetbyactsub, file = ".\\tidydatasets\\tidydatamean.txt", row.name=FALSE)
-# datasetmean
-write.csv(datasetmean,".\\tidydatasets\\datasetmean.csv", row.names = FALSE)
-# datasetsd
-write.csv(datasetsd,".\\tidydatasets\\datasetsd.csv", row.names = FALSE)
+write.table(tidydataset, file = ".\\tidydatasets\\tidydatamean.txt", row.name=FALSE)
+write.csv(tidydataset,".\\tidydatasets\\tidydatamean.csv", row.names = FALSE)
+
