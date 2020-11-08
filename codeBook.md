@@ -1,6 +1,6 @@
 # Information about the update of available codebooks with the data. This code book indicate all the variables and summaries calculated, along with units, and any other relevant information.
 
-The analysis was performed on the file run_analysis.R. Details are given below
+The analysis was performed on the file run_analysis.R. Details are given below:
 
 Training and test sets have been concatenated;
 
